@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/uploads/favicon.png">
+  <link rel="icon" href="/uploads/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="配置tomcat为服务1[root@localhost ~]# vim /etc/init.d/tomcat8
+
+tomcat服务脚本">
+  <meta name="author" content="Wenhowe.">
+  <meta name="keywords" content="">
+  
+  <title>配置tomcat为服务 - Wenhowe. Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.10","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Wenhowe. Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/uploads/welcome-cover.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="配置tomcat为服务">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2017-10-11 10:00" pubdate>
+        2017年10月11日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">配置tomcat为服务</h1>
+            
+            <div class="markdown-body">
+              <h1 id="配置tomcat为服务"><a href="#配置tomcat为服务" class="headerlink" title="配置tomcat为服务"></a>配置tomcat为服务</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@localhost ~]<span class="hljs-comment"># vim /etc/init.d/tomcat8</span><br></code></pre></td></tr></table></figure>
+
+<p><em>tomcat服务脚本</em></p>
+<span id="more"></span>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># description: Apache Tomcat init script</span><br><span class="hljs-comment"># processname: tomcat  </span><br><span class="hljs-comment"># chkconfig: 234 20 80  </span><br><span class="hljs-comment">#</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># Copyright (C) 2014 Miglen Evlogiev</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># This program is free software: you can redistribute it and/or modify it under</span><br><span class="hljs-comment"># the terms of the GNU General Public License as published by the Free Software</span><br><span class="hljs-comment"># Foundation, either version 3 of the License, or (at your option) any later</span><br><span class="hljs-comment"># version.</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># This program is distributed in the hope that it will be useful, but WITHOUT</span><br><span class="hljs-comment"># ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS</span><br><span class="hljs-comment"># FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># You should have received a copy of the GNU General Public License along with</span><br><span class="hljs-comment"># this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># Initially forked from: gist.github.com/valotas/1000094</span><br><span class="hljs-comment"># Source: gist.github.com/miglen/5590986</span><br><br><br><span class="hljs-comment">#Location of JAVA_HOME (bin files)</span><br><span class="hljs-built_in">export</span> JAVA_HOME=/usr/<span class="hljs-built_in">local</span>/java/jdk1.8.0_102<br><span class="hljs-built_in">export</span> JRE_HOME=/usr/<span class="hljs-built_in">local</span>/java/jdk1.8.0_102/jre<br><br><span class="hljs-comment">#Add Java binary files to PATH</span><br><span class="hljs-built_in">export</span> PATH=<span class="hljs-variable">$JAVA_HOME</span>/bin:<span class="hljs-variable">$PATH</span><br><br><span class="hljs-comment">#CATALINA_HOME is the location of the bin files of Tomcat  </span><br><span class="hljs-built_in">export</span> CATALINA_HOME=/usr/<span class="hljs-built_in">local</span>/tomcat8<br><br><span class="hljs-comment">#CATALINA_BASE is the location of the configuration files of this instance of Tomcat</span><br><span class="hljs-built_in">export</span> CATALINA_BASE=/usr/<span class="hljs-built_in">local</span>/tomcat8<br><br><br><span class="hljs-comment">#TOMCAT_USAGE is the message if this script is called without any options</span><br>TOMCAT_USAGE=<span class="hljs-string">&quot;Usage: <span class="hljs-variable">$0</span> &#123;\e[00;32mstart\e[00m|\e[00;31mstop\e[00m|\e[00;31mkill\e[00m|\e[00;32mstatus\e[00m|\e[00;31mrestart\e[00m&#125;&quot;</span><br><br><span class="hljs-comment">#SHUTDOWN_WAIT is wait time in seconds for java proccess to stop</span><br>SHUTDOWN_WAIT=20<br><br><span class="hljs-function"><span class="hljs-title">tomcat_pid</span></span>() &#123;<br>        <span class="hljs-built_in">echo</span> `ps -fe | grep <span class="hljs-variable">$CATALINA_BASE</span> | grep -v grep | tr -s <span class="hljs-string">&quot; &quot;</span>|cut -d<span class="hljs-string">&quot; &quot;</span> -f2`<br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">start</span></span>() &#123;<br>  pid=$(tomcat_pid)<br>  <span class="hljs-keyword">if</span> [ -n <span class="hljs-string">&quot;<span class="hljs-variable">$pid</span>&quot;</span> ]<br>  <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;31mTomcat is already running (pid: <span class="hljs-variable">$pid</span>)\e[00m&quot;</span><br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-comment"># Start tomcat</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;32mStarting tomcat\e[00m&quot;</span><br>    <span class="hljs-comment">#ulimit -n 100000</span><br>    <span class="hljs-comment">#umask 007</span><br>    <span class="hljs-comment">#/bin/su -p -s /bin/sh $TOMCAT_USER</span><br>        <span class="hljs-keyword">if</span> [ `user_exists <span class="hljs-variable">$TOMCAT_USER</span>` = <span class="hljs-string">&quot;1&quot;</span> ]<br>        <span class="hljs-keyword">then</span><br>                /bin/su <span class="hljs-variable">$TOMCAT_USER</span> -c <span class="hljs-variable">$CATALINA_HOME</span>/bin/startup.sh<br>        <span class="hljs-keyword">else</span><br>                <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;31mTomcat user <span class="hljs-variable">$TOMCAT_USER</span> does not exists. Starting with <span class="hljs-subst">$(id)</span>\e[00m&quot;</span><br>                sh <span class="hljs-variable">$CATALINA_HOME</span>/bin/startup.sh<br>        <span class="hljs-keyword">fi</span><br>        status<br>  <span class="hljs-keyword">fi</span><br>  <span class="hljs-built_in">return</span> 0<br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">status</span></span>()&#123;<br>          pid=$(tomcat_pid)<br>          <span class="hljs-keyword">if</span> [ -n <span class="hljs-string">&quot;<span class="hljs-variable">$pid</span>&quot;</span> ]<br>            <span class="hljs-keyword">then</span> <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;32mTomcat is running with pid: <span class="hljs-variable">$pid</span>\e[00m&quot;</span><br>          <span class="hljs-keyword">else</span><br>            <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;31mTomcat is not running\e[00m&quot;</span><br>            <span class="hljs-built_in">return</span> 3<br>          <span class="hljs-keyword">fi</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">terminate</span></span>() &#123;<br>	<span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;31mTerminating Tomcat\e[00m&quot;</span><br>	<span class="hljs-built_in">kill</span> -9 $(tomcat_pid)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">stop</span></span>() &#123;<br>  pid=$(tomcat_pid)<br>  <span class="hljs-keyword">if</span> [ -n <span class="hljs-string">&quot;<span class="hljs-variable">$pid</span>&quot;</span> ]<br>  <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;31mStoping Tomcat\e[00m&quot;</span><br>    <span class="hljs-comment">#/bin/su -p -s /bin/sh $TOMCAT_USER</span><br>        sh <span class="hljs-variable">$CATALINA_HOME</span>/bin/shutdown.sh<br><br>    <span class="hljs-built_in">let</span> kwait=<span class="hljs-variable">$SHUTDOWN_WAIT</span><br>    count=0;<br>    until [ `ps -p <span class="hljs-variable">$pid</span> | grep -c <span class="hljs-variable">$pid</span>` = <span class="hljs-string">&#x27;0&#x27;</span> ] || [ <span class="hljs-variable">$count</span> -gt <span class="hljs-variable">$kwait</span> ]<br>    <span class="hljs-keyword">do</span><br>      <span class="hljs-built_in">echo</span> -n -e <span class="hljs-string">&quot;\n\e[00;31mwaiting for processes to exit\e[00m&quot;</span>;<br>      sleep 1<br>      <span class="hljs-built_in">let</span> count=<span class="hljs-variable">$count</span>+1;<br>    <span class="hljs-keyword">done</span><br><br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$count</span> -gt <span class="hljs-variable">$kwait</span> ]; <span class="hljs-keyword">then</span><br>      <span class="hljs-built_in">echo</span> -n -e <span class="hljs-string">&quot;\n\e[00;31mkilling processes didn&#x27;t stop after <span class="hljs-variable">$SHUTDOWN_WAIT</span> seconds\e[00m&quot;</span><br>      terminate<br>    <span class="hljs-keyword">fi</span><br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\e[00;31mTomcat is not running\e[00m&quot;</span><br>  <span class="hljs-keyword">fi</span><br><br>  <span class="hljs-built_in">return</span> 0<br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">user_exists</span></span>()&#123;<br>        <span class="hljs-keyword">if</span> id -u <span class="hljs-variable">$1</span> &gt;/dev/null 2&gt;&amp;1; <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;1&quot;</span><br>        <span class="hljs-keyword">else</span><br>                <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;0&quot;</span><br>        <span class="hljs-keyword">fi</span><br>&#125;<br><br><span class="hljs-keyword">case</span> <span class="hljs-variable">$1</span> <span class="hljs-keyword">in</span><br>	start)<br>	  start<br>	;;<br>	stop)  <br>	  stop<br>	;;<br>	restart)<br>	  stop<br>	  start<br>	;;<br>	status)<br>		status<br>		<span class="hljs-built_in">exit</span> $?  <br>	;;<br>	<span class="hljs-built_in">kill</span>)<br>		terminate<br>	;;		<br>	*)<br>		<span class="hljs-built_in">echo</span> -e <span class="hljs-variable">$TOMCAT_USAGE</span><br>	;;<br><span class="hljs-keyword">esac</span>    <br><span class="hljs-built_in">exit</span> 0<br></code></pre></td></tr></table></figure>
+
+<p>这个脚本中需要注意你的jdk,jre位置和tomcat所在位置, 修改正确后保存。</p>
+<h2 id="给服务授权"><a href="#给服务授权" class="headerlink" title="给服务授权"></a>给服务授权</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@localhost ~]<span class="hljs-comment"># chmod +x /etc/init.d/tomcat8</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="使用服务"><a href="#使用服务" class="headerlink" title="使用服务"></a>使用服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@localhost ~]<span class="hljs-comment"># service tomcat8 status</span><br>Tomcat is not running<br><br>[root@localhost ~]<span class="hljs-comment"># service tomcat8 start</span><br>Starting tomcat<br>Using CATALINA_BASE:   /usr/<span class="hljs-built_in">local</span>/tomcat8<br>Using CATALINA_HOME:   /usr/<span class="hljs-built_in">local</span>/tomcat8<br>Using CATALINA_TMPDIR: /usr/<span class="hljs-built_in">local</span>/tomcat8/temp<br>Using JRE_HOME:        /usr/<span class="hljs-built_in">local</span>/java/jdk1.8.0_102/jre<br>Using CLASSPATH:       /usr/<span class="hljs-built_in">local</span>/tomcat8/bin/bootstrap.jar:/usr/<span class="hljs-built_in">local</span>/tomcat8/bin/tomcat-juli.jar<br>Tomcat started.<br>Tomcat is running with pid: 15282<br><br>[root@localhost ~]<span class="hljs-comment"># service tomcat8 stop</span><br>Stoping Tomcat<br>Using CATALINA_BASE:   /usr/<span class="hljs-built_in">local</span>/tomcat8<br>Using CATALINA_HOME:   /usr/<span class="hljs-built_in">local</span>/tomcat8<br>Using CATALINA_TMPDIR: /usr/<span class="hljs-built_in">local</span>/tomcat8/temp<br>Using JRE_HOME:        /usr/<span class="hljs-built_in">local</span>/java/jdk1.8.0_102/jre<br>Using CLASSPATH:       /usr/<span class="hljs-built_in">local</span>/tomcat8/bin/bootstrap.jar:/usr/<span class="hljs-built_in">local</span>/tomcat8/bin/tomcat-juli.jar<br><br>waiting <span class="hljs-keyword">for</span> processes to <span class="hljs-built_in">exit</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="设置开机启动"><a href="#设置开机启动" class="headerlink" title="设置开机启动"></a>设置开机启动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@localhost ~]<span class="hljs-comment"># chkconfig --add tomcat8</span><br>[root@localhost ~]<span class="hljs-comment"># chkconfig</span><br>auditd         	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>blk-availability	0:off	1:on	2:on	3:on	4:on	5:on	6:off<br>crond          	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>ip6tables      	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>iptables       	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>iscsi          	0:off	1:off	2:off	3:on	4:on	5:on	6:off<br>iscsid         	0:off	1:off	2:off	3:on	4:on	5:on	6:off<br>lvm2-monitor   	0:off	1:on	2:on	3:on	4:on	5:on	6:off<br>mdmonitor      	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>multipathd     	0:off	1:off	2:off	3:off	4:off	5:off	6:off<br>mysqld         	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>netconsole     	0:off	1:off	2:off	3:off	4:off	5:off	6:off<br>netfs          	0:off	1:off	2:off	3:on	4:on	5:on	6:off<br>network        	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>nginx          	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>postfix        	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>rdisc          	0:off	1:off	2:off	3:off	4:off	5:off	6:off<br>redis_6379     	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>restorecond    	0:off	1:off	2:off	3:off	4:off	5:off	6:off<br>rsyslog        	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>saslauthd      	0:off	1:off	2:off	3:off	4:off	5:off	6:off<br>sshd           	0:off	1:off	2:on	3:on	4:on	5:on	6:off<br>tomcat8        	0:off	1:off	2:on	3:on	4:on	5:off	6:off<br>udev-post      	0:off	1:on	2:on	3:on	4:on	5:on	6:off<br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Tomcat/">Tomcat</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Apache/">Apache</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Tomcat/">Tomcat</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/10/12/install-nginx/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">安装nginx</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2017/10/11/install-tomcat/">
+                        <span class="hidden-mobile">安装tomcat</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
