@@ -4,6 +4,62 @@
   
   
   <entry>
+    <title>CentOS8.3安装MySQL8.0</title>
+    <link href="/2020/10/25/CentOS831-install-Mysql8.0/"/>
+    <url>/2020/10/25/CentOS831-install-Mysql8.0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="安装MySQL8-0"><a href="#安装MySQL8-0" class="headerlink" title="安装MySQL8.0"></a>安装MySQL8.0</h1><ol><li><p><code>@mysql</code> 表示将会安装<code>MySQL</code>及其所有依赖项</p><blockquote><p>$ sudo dnf install @mysql</p></blockquote></li><li><p>安装完成后，通过以下命令启动<code>MySQL</code>服务并开启开机自启动</p><blockquote><p>$ sudo systemctl enable –now mysqld</p></blockquote></li><li><p>随后输入该命令检查服务启动状态</p><blockquote><p>$ sudo systemctl status mysqld</p></blockquote></li><li><p>运行 <code>mysql_secure_installation</code> 脚本，该脚本执行多个与安全相关的操作并设置 <code>MySQL</code> <code>root</code>密码：</p><blockquote><p>$ sudo mysql_secure_installation</p></blockquote></li><li><p>最后输入命令进入数据库</p><blockquote><p>$ mysql -u root -p</p></blockquote></li></ol><hr><ol start="6"><li><p>添加被允许的防火墙端口</p><blockquote><p>$ firewall-cmd –zone=public –add-port=3306/tcp –permanent</p></blockquote></li><li><p>重启防火墙</p><blockquote><p>$ firewall-cmd –reload</p></blockquote></li><li><p>修改root允许远程访问</p><ul><li>查询<code>user</code>表，确认<code>root</code>的<code>host</code>是否为<code>localhost</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> host, <span class="hljs-keyword">user</span>, authentication_string, plugin <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;<br></code></pre></td></tr></table></figure></li><li>先创建一个用户并指定密码策略<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> <span class="hljs-string">&#x27;myName&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> IDENTIFIED <span class="hljs-keyword">WITH</span> mysql_native_password <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;myPassword&#x27;</span>;<br></code></pre></td></tr></table></figure></li><li>再进行授权<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> privileges <span class="hljs-keyword">on</span> <span class="hljs-operator">*</span>.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;myName&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">with</span> <span class="hljs-keyword">grant</span> option;<br></code></pre></td></tr></table></figure></li><li><code>root</code>账户允许远程访问<ul><li>更新指定密码策略的密码<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> identified <span class="hljs-keyword">with</span> mysql_native_password <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;myPassword&#x27;</span>;<br></code></pre></td></tr></table></figure></li><li>刷新缓存<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">flush privileges;<br></code></pre></td></tr></table></figure></li><li>查询<code>user</code>表查看<code>host</code>, <code>user</code>，确认<code>host</code>是否为<code>localhost</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> host, <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;<br></code></pre></td></tr></table></figure></li><li>更新<code>root</code>的<code>host</code>为<code>%</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">update <span class="hljs-keyword">user</span> <span class="hljs-keyword">set</span> host<span class="hljs-operator">=</span><span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">user</span><span class="hljs-operator">=</span><span class="hljs-string">&#x27;root&#x27;</span>;<br></code></pre></td></tr></table></figure></li><li>进行授权<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> privileges <span class="hljs-keyword">on</span> <span class="hljs-operator">*</span>.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">with</span> <span class="hljs-keyword">grant</span> option;<br></code></pre></td></tr></table></figure></li><li>刷新缓存<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">flush privileges;<br></code></pre></td></tr></table></figure></li></ul></li></ul></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>CentOS</tag>
+      
+      <tag>MySQL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>查看Linux版本</title>
+    <link href="/2020/10/25/view-linux-version/"/>
+    <url>/2020/10/25/view-linux-version/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>[root@localhost ~]# cat /etc/redhat-release<br>CentOS Linux release 8.3.2011</p></blockquote><blockquote><p>[root@localhost ~]# cat /etc/os-release<br>NAME=”CentOS Linux”<br>VERSION=”8”<br>ID=”centos”<br>ID_LIKE=”rhel fedora”<br>VERSION_ID=”8”<br>PLATFORM_ID=”platform:el8”<br>PRETTY_NAME=”CentOS Linux 8”<br>ANSI_COLOR=”0;31”<br>CPE_NAME=”cpe:/o:centos:centos:8”<br>HOME_URL=”<a href="https://centos.org/&quot;">https://centos.org/&quot;</a><br>BUG_REPORT_URL=”<a href="https://bugs.centos.org/&quot;">https://bugs.centos.org/&quot;</a><br>CENTOS_MANTISBT_PROJECT=”CentOS-8”<br>CENTOS_MANTISBT_PROJECT_VERSION=”8”</p></blockquote><blockquote><p>[root@localhost ~]# rpm -q centos-linux-release<br>centos-linux-release-8.3-1.2011.el8.noarch</p></blockquote><blockquote><p>[root@localhost ~]# uname -a<br>Linux localhost.localdomain 4.18.0-240.el8.x86_64 #1 SMP Fri Sep 25 19:48:47 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</p></blockquote><blockquote><p>[root@localhost ~]# cat /proc/version<br>Linux version 4.18.0-240.el8.x86_64 (<a href="mailto:&#x6d;&#111;&#x63;&#x6b;&#98;&#x75;&#x69;&#x6c;&#100;&#x40;&#107;&#98;&#x75;&#105;&#108;&#x64;&#101;&#x72;&#x2e;&#98;&#x73;&#121;&#115;&#46;&#x63;&#101;&#110;&#116;&#111;&#115;&#46;&#x6f;&#x72;&#103;">&#x6d;&#111;&#x63;&#x6b;&#98;&#x75;&#x69;&#x6c;&#100;&#x40;&#107;&#98;&#x75;&#105;&#108;&#x64;&#101;&#x72;&#x2e;&#98;&#x73;&#121;&#115;&#46;&#x63;&#101;&#110;&#116;&#111;&#115;&#46;&#x6f;&#x72;&#103;</a>) (gcc version 8.3.1 20191121 (Red Hat 8.3.1-5) (GCC)) #1 SMP Fri Sep 25 19:48:47 UTC 2020</p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>CentOS</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>关于茹炳晟《软件测试52讲》学习笔记</title>
     <link href="/2020/09/20/Note/"/>
     <url>/2020/09/20/Note/</url>
@@ -103,38 +159,9 @@
     
     <tags>
       
-      <tag>CentOS 7</tag>
-      
       <tag>MySQL</tag>
       
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>adb实用命令</title>
-    <link href="/2017/11/11/adb-command/"/>
-    <url>/2017/11/11/adb-command/</url>
-    
-    <content type="html"><![CDATA[<h3 id="记录下常用的adb命令"><a href="#记录下常用的adb命令" class="headerlink" title="记录下常用的adb命令"></a>记录下常用的adb命令</h3><blockquote><p>adb devices       查看设备</p></blockquote><blockquote><p>adb kill-server       关闭adb后台进程</p></blockquote><blockquote><p>adb -s devices_id       制定连接某个设备</p></blockquote><blockquote><p>adb shell       进入管理设备</p></blockquote><blockquote><p>adb tcpip       脱离USB，tcp连接设备</p></blockquote><blockquote><p>adb connect devices_id       连接开启了tcp连接的设备</p></blockquote><blockquote><p>adb logcat       查看log</p></blockquote><blockquote><p>adb bugreport       收集日志数据</p></blockquote><blockquote><p>avdmanager list avd       列出所有Android虚拟机</p></blockquote><blockquote><p>emulator -avd avdName     启动Android虚拟机</p></blockquote><blockquote><p>adb shell dumpsys     获取连接设备所有系统服务的诊断输出</p></blockquote><blockquote><p>adb shell pm      调用软件包管理器</p></blockquote><blockquote><p>adb shell am      调用activity管理器</p></blockquote><blockquote><p>adb shell ps      显示设备当前所有进程状态</p></blockquote><blockquote><p>adb shell monkey      模拟随机点击事件</p></blockquote><blockquote><p>adb shell screencap /sdcard/path      截取设备屏幕</p></blockquote><blockquote><p>adb shell screenrecord /sdcard/path      录取设备屏幕</p></blockquote>]]></content>
-    
-    
-    <categories>
-      
-      <category>android</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>android</tag>
-      
-      <tag>adb</tag>
-      
-      <tag>linux</tag>
+      <tag>CentOS 7</tag>
       
     </tags>
     
@@ -293,6 +320,35 @@
       <tag>Git</tag>
       
       <tag>Github</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>adb实用命令</title>
+    <link href="/2017/10/09/adb-command/"/>
+    <url>/2017/10/09/adb-command/</url>
+    
+    <content type="html"><![CDATA[<h3 id="记录下常用的adb命令"><a href="#记录下常用的adb命令" class="headerlink" title="记录下常用的adb命令"></a>记录下常用的adb命令</h3><blockquote><p>adb devices       查看设备</p></blockquote><blockquote><p>adb kill-server       关闭adb后台进程</p></blockquote><blockquote><p>adb -s devices_id       制定连接某个设备</p></blockquote><blockquote><p>adb shell       进入管理设备</p></blockquote><blockquote><p>adb tcpip       脱离USB，tcp连接设备</p></blockquote><blockquote><p>adb connect devices_id       连接开启了tcp连接的设备</p></blockquote><blockquote><p>adb logcat       查看log</p></blockquote><blockquote><p>adb bugreport       收集日志数据</p></blockquote><blockquote><p>avdmanager list avd       列出所有Android虚拟机</p></blockquote><blockquote><p>emulator -avd avdName     启动Android虚拟机</p></blockquote><blockquote><p>adb shell dumpsys     获取连接设备所有系统服务的诊断输出</p></blockquote><blockquote><p>adb shell pm      调用软件包管理器</p></blockquote><blockquote><p>adb shell am      调用activity管理器</p></blockquote><blockquote><p>adb shell ps      显示设备当前所有进程状态</p></blockquote><blockquote><p>adb shell monkey      模拟随机点击事件</p></blockquote><blockquote><p>adb shell screencap /sdcard/path      截取设备屏幕</p></blockquote><blockquote><p>adb shell screenrecord /sdcard/path      录取设备屏幕</p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>android</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>android</tag>
+      
+      <tag>adb</tag>
+      
+      <tag>linux</tag>
       
     </tags>
     

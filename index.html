@@ -180,6 +180,144 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/25/CentOS831-install-Mysql8.0/" target="_self">
+          <img src="/uploads/welcome-cover.jpg" srcset="/img/loading.gif" lazyload alt="CentOS8.3安装MySQL8.0">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/25/CentOS831-install-Mysql8.0/" target="_self">
+          CentOS8.3安装MySQL8.0
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/25/CentOS831-install-Mysql8.0/" target="_self">
+          
+          
+            
+          
+          安装MySQL8.0
+@mysql 表示将会安装MySQL及其所有依赖项
+
+$ sudo dnf install @mysql
+
+
+安装完成后，通过以下命令启动MySQL服务并开启开机自启动
+
+$ sudo systemctl enable –now mysqld
+
+
+随后输入该命令检查服务启动状态
+
+$ sudo systemctl status mysqld
+
+
+运行 mysql_secure
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-25 10:00" pubdate>
+              2020-10-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux/">Linux</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">Linux</a>
+            
+              <a href="/tags/CentOS/">CentOS</a>
+            
+              <a href="/tags/MySQL/">MySQL</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/25/view-linux-version/" target="_self">
+          <img src="/uploads/welcome-cover.jpg" srcset="/img/loading.gif" lazyload alt="查看Linux版本">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/25/view-linux-version/" target="_self">
+          查看Linux版本
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/25/view-linux-version/" target="_self">
+          
+          
+            
+          
+          
+[root@localhost ~]# cat /etc/redhat-releaseCentOS Linux release 8.3.2011
+
+
+[root@localhost ~]# cat /etc/os-releaseNAME=”CentOS Linux”VERSION=”8”ID=”centos”ID_LIKE=”rhel fedora”VERSION_ID=”8”PLATFORM_
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-25 10:00" pubdate>
+              2020-10-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux/">Linux</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">Linux</a>
+            
+              <a href="/tags/CentOS/">CentOS</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/20/Note/" target="_self">
           <img src="/uploads/testing.jpg" srcset="/img/loading.gif" lazyload alt="关于茹炳晟《软件测试52讲》学习笔记">
         </a>
@@ -407,85 +545,9 @@ OpenJDK说明OpenJDK是Java平台的开源项目，是CentOS 7中的默认Java�
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/CentOS-7/">CentOS 7</a>
-            
               <a href="/tags/MySQL/">MySQL</a>
             
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/11/11/adb-command/" target="_self">
-          <img src="/uploads/welcome-cover.jpg" srcset="/img/loading.gif" lazyload alt="adb实用命令">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2017/11/11/adb-command/" target="_self">
-          adb实用命令
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2017/11/11/adb-command/" target="_self">
-          
-          
-            
-          
-          记录下常用的adb命令
-adb devices       查看设备
-
-
-adb kill-server       关闭adb后台进程
-
-
-adb -s devices_id       制定连接某个设备
-
-
-adb shell       进入管理设备
-
-
-adb tcpip       脱离USB，tcp连接设备
-
-
-adb connect devices_id       连接开启了tcp
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-11-11 10:00" pubdate>
-              2017-11-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/android/">android</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/android/">android</a>
-            
-              <a href="/tags/adb/">adb</a>
-            
-              <a href="/tags/linux/">linux</a>
+              <a href="/tags/CentOS-7/">CentOS 7</a>
             
           </div>
         
@@ -697,64 +759,6 @@ tomcat服务脚本
           
           安装tomcat上一章节我们安装了JDK的环境，Tomcat运行的前提是要有JDK环境。
 下载Tomcat123[root@localhost ~]# wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.5/bin/apache-tomcat-8.5.5.tar.gz[root@localhost ~]# tar -zxvf apac
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-10-11 10:00" pubdate>
-              2017-10-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Tomcat/">Tomcat</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Tomcat/">Tomcat</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/10/11/optimization-tomcat8/" target="_self">
-          <img src="/uploads/Tomcat.png" srcset="/img/loading.gif" lazyload alt="优化tomcat8">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2017/10/11/optimization-tomcat8/" target="_self">
-          优化tomcat8
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2017/10/11/optimization-tomcat8/" target="_self">
-          
-          
-            
-          
-          优化tomcat8我们优化tomcat的目的是提高并发性，即在多线程环境下能够快速响应，提高吞吐量。
-首先在tomcat的bin目录下新建一个名为 setenv.sh 的文件，tomcat启动时会自动加载该文件。
-1[root@localhost bin]# vim setenv.sh
         </a>
       </p>
 

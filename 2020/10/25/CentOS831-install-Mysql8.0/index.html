@@ -18,7 +18,7 @@
   <meta name="author" content="Wenhowe.">
   <meta name="keywords" content="">
   
-  <title>关于茹炳晟《软件测试52讲》学习笔记 - Wenhowe. Blog</title>
+  <title>CentOS8.3安装MySQL8.0 - Wenhowe. Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="关于茹炳晟《软件测试52讲》学习笔记">
+            <span class="h2" id="subtitle" title="CentOS8.3安装MySQL8.0">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-09-20 09:00" pubdate>
-        2020年9月20日 上午
+      <time datetime="2020-10-25 10:00" pubdate>
+        2020年10月25日 上午
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      654 字
+      312 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      4
        分钟
     </span>
   
@@ -225,34 +225,63 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">关于茹炳晟《软件测试52讲》学习笔记</h1>
+            <h1 style="display: none">CentOS8.3安装MySQL8.0</h1>
             
             <div class="markdown-body">
-              <h3 id="优秀的测试工程师需要这样做"><a href="#优秀的测试工程师需要这样做" class="headerlink" title="优秀的测试工程师需要这样做"></a>优秀的测试工程师需要这样做</h3><p>在面对势不可挡的ABC(AI人工智能、BigData大数据、Cloud云服务)技术浪潮下，无论是从被测对象本身的复杂性、多样性和规模性来讲，还是从测试技术以及测试基础架构从无到有的发展来讲，都需要测试工程师的知识面、测试设计能力、测试开发能力和测试平台化抽象能力有质的提升。关键以下三点：</p>
-<ol>
-<li>不仅需要从业务角度本身出发对软件进行手工测试验证，还更需要掌握完整的自动化测试开发技术来设计自动化测试用例</li>
-<li>必须掌握设计开发测试基础架构的关键技术</li>
-<li>必须系统性的思考如何将测试数据工具化、服务化、最终实现平台化</li>
+              <h1 id="安装MySQL8-0"><a href="#安装MySQL8-0" class="headerlink" title="安装MySQL8.0"></a>安装MySQL8.0</h1><ol>
+<li><p><code>@mysql</code> 表示将会安装<code>MySQL</code>及其所有依赖项</p>
+<blockquote>
+<p>$ sudo dnf install @mysql</p>
+</blockquote>
+</li>
+<li><p>安装完成后，通过以下命令启动<code>MySQL</code>服务并开启开机自启动</p>
+<blockquote>
+<p>$ sudo systemctl enable –now mysqld</p>
+</blockquote>
+</li>
+<li><p>随后输入该命令检查服务启动状态</p>
+<blockquote>
+<p>$ sudo systemctl status mysqld</p>
+</blockquote>
+</li>
+<li><p>运行 <code>mysql_secure_installation</code> 脚本，该脚本执行多个与安全相关的操作并设置 <code>MySQL</code> <code>root</code>密码：</p>
+<blockquote>
+<p>$ sudo mysql_secure_installation</p>
+</blockquote>
+</li>
+<li><p>最后输入命令进入数据库</p>
+<blockquote>
+<p>$ mysql -u root -p</p>
+</blockquote>
+</li>
 </ol>
 <hr>
-<h3 id="等价类划分和边界值分析"><a href="#等价类划分和边界值分析" class="headerlink" title="等价类划分和边界值分析"></a>等价类划分和边界值分析</h3><ol>
-<li><p>等价类划分方法，是将所有可能的输入数据划分成若干个子集，在每个子集中，如果任意一个输入数据对于揭露程序中潜在错误都具有同等效果，那么这样的子集就构成了一个等价类。后续只要从每个等价类中任意选取一个值进行测试，就可以用少量具有代表性的测试输入取得较好的测试覆盖结果。</p>
+<ol start="6">
+<li><p>添加被允许的防火墙端口</p>
+<blockquote>
+<p>$ firewall-cmd –zone=public –add-port=3306/tcp –permanent</p>
+</blockquote>
 </li>
-<li><p>边界值分析方法，是选取输入、输出的边界值进行测试。因为通常大量的软件错误是发生在输入或输出范围的边界上，所以需要对边界值进行重点测试，通常选取正好等于、刚刚大于或刚刚小于边界的值作为测试数据。</p>
+<li><p>重启防火墙</p>
+<blockquote>
+<p>$ firewall-cmd –reload</p>
+</blockquote>
+</li>
+<li><p>修改root允许远程访问</p>
 <ul>
-<li><code>边界值分析方法是等价类划分方法的一个补充</code></li>
-<li><code>用例等价类：操作前提+预期结果 = 实际结果</code></li>
-<li><code>边界值分析：操作过程(输入输出)的边界值试探</code></li>
+<li>查询<code>user</code>表，确认<code>root</code>的<code>host</code>是否为<code>localhost</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> host, <span class="hljs-keyword">user</span>, authentication_string, plugin <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;<br></code></pre></td></tr></table></figure></li>
+<li>先创建一个用户并指定密码策略<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> <span class="hljs-string">&#x27;myName&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> IDENTIFIED <span class="hljs-keyword">WITH</span> mysql_native_password <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;myPassword&#x27;</span>;<br></code></pre></td></tr></table></figure></li>
+<li>再进行授权<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> privileges <span class="hljs-keyword">on</span> <span class="hljs-operator">*</span>.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;myName&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">with</span> <span class="hljs-keyword">grant</span> option;<br></code></pre></td></tr></table></figure></li>
+<li><code>root</code>账户允许远程访问<ul>
+<li>更新指定密码策略的密码<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> identified <span class="hljs-keyword">with</span> mysql_native_password <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;myPassword&#x27;</span>;<br></code></pre></td></tr></table></figure></li>
+<li>刷新缓存<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">flush privileges;<br></code></pre></td></tr></table></figure></li>
+<li>查询<code>user</code>表查看<code>host</code>, <code>user</code>，确认<code>host</code>是否为<code>localhost</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> host, <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;<br></code></pre></td></tr></table></figure></li>
+<li>更新<code>root</code>的<code>host</code>为<code>%</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">update <span class="hljs-keyword">user</span> <span class="hljs-keyword">set</span> host<span class="hljs-operator">=</span><span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">user</span><span class="hljs-operator">=</span><span class="hljs-string">&#x27;root&#x27;</span>;<br></code></pre></td></tr></table></figure></li>
+<li>进行授权<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> privileges <span class="hljs-keyword">on</span> <span class="hljs-operator">*</span>.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">with</span> <span class="hljs-keyword">grant</span> option;<br></code></pre></td></tr></table></figure></li>
+<li>刷新缓存<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">flush privileges;<br></code></pre></td></tr></table></figure></li>
 </ul>
 </li>
-</ol>
-<hr>
-<h3 id="“好的”测试用例必须具备哪些特征"><a href="#“好的”测试用例必须具备哪些特征" class="headerlink" title="“好的”测试用例必须具备哪些特征"></a>“好的”测试用例必须具备哪些特征</h3><ol>
-<li><p>整体完备性：”好的”测试用例一定是一个完备的整体，是有效测试用例的集合，能够完全覆盖测试需求和业务场景</p>
-</li>
-<li><p>等价类划分的准确性：指的是对于每个等价类都能保证只要其中一条用例输入测试通过，其它的用例也一定测试通过</p>
-</li>
-<li><p>等价类集合的完备性：需要保证所有可能的边界值和边界条件都已经正确识别</p>
+</ul>
 </li>
 </ol>
 
@@ -264,7 +293,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a>
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
                     
                   </div>
                 
@@ -272,7 +301,11 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E6%B5%8B%E8%AF%95/">测试</a>
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/CentOS/">CentOS</a>
+                    
+                      <a class="hover-with-bg" href="/tags/MySQL/">MySQL</a>
                     
                   </div>
                 
@@ -289,18 +322,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/10/25/view-linux-version/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">查看Linux版本</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/02/15/use-jemeter-test-tomcat/">
-                        <span class="hidden-mobile">使用jemeter测试tomcat性能</span>
+                      <a href="/2020/10/25/view-linux-version/">
+                        <span class="hidden-mobile">查看Linux版本</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
